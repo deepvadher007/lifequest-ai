@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import LevelUpCinematic from "./LevelUpCinematic";
 import CursorGlow from "./CursorGlow";
 import AmbientBackground from "./AmbientBackground";
+import AINarrator from "./AInarrator";
 
 export default function AppShell({ children }) {
   return (
@@ -14,6 +15,7 @@ export default function AppShell({ children }) {
         {children}
       </main>
       <LevelUpCinematic />
+      <AINarrator />
     </div>
   );
 }

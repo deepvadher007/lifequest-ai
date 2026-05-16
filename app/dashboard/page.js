@@ -2,8 +2,9 @@
 import { motion } from "framer-motion";
 import { useGame } from "../lib/store";
 import AppShell from "../components/AppShell";
+import PlayerAvatar from "../components/PlayerAvatar";
 import Link from "next/link";
-import { Sword, Bot, BarChart2, Zap, TrendingUp, CheckCircle2, Circle, Skull } from "lucide-react";
+import { Sword, Bot, BarChart2, Zap, TrendingUp, CheckCircle2, Circle, Skull, Sparkles } from "lucide-react";
 
 function StatCard({ label, value, sub, color, icon: Icon, delay = 0 }) {
   return (
@@ -27,29 +28,75 @@ function StatCard({ label, value, sub, color, icon: Icon, delay = 0 }) {
 }
 
 export default function DashboardPage() {
-  const { state, xpProgress, xpInCurrentLevel, XP_PER_LEVEL } = useGame();
+  const { state, xpProgress, xpInCurrentLevel, XP_PER_LEVEL, getAuraColor, combo } = useGame();
   const todayQuests = state.quests.slice(0, 5);
   const doneToday = todayQuests.filter(q => q.done).length;
   const graphBars = state.weeklyXP;
   const days = ["M", "T", "W", "T", "F", "S", "S"];
   const maxBar = Math.max(...graphBars);
+  const auraColor = getAuraColor ? getAuraColor() : "#a78bfa";
 
   return (
     <AppShell>
       <div className="p-8 max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header with Avatar */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-8 flex items-center gap-8"
         >
-          <h1 className="text-3xl font-bold text-white">
-            Good morning, <span style={{
-              background: "linear-gradient(135deg, #a78bfa, #60a5fa)",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
-            }}>{state.user.name}</span> 👋
-          </h1>
-          <p className="text-white/40 mt-1">You&apos;re on a {state.streak}-day streak. Keep the momentum going.</p>
+          {/* Avatar */}
+          <PlayerAvatar size="md" showTitle={true} />
+
+          {/* Greeting */}
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-white">
+              Good morning,{" "}
+              <span style={{
+                background: `linear-gradient(135deg, ${auraColor}, #60a5fa)`,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
+              }}>{state.user.name}</span> 👋
+            </h1>
+            <p className="text-white/40 mt-1">You&apos;re on a {state.streak}-day streak. Keep the momentum going.</p>
+
+            {/* Combo indicator */}
+            {combo >= 2 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="inline-flex items-center gap-2 mt-3 px-4 py-1.5 rounded-full"
+                style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)" }}
+              >
+                <motion.span animate={{ scale: [1,1.3,1] }} transition={{ duration: 0.5, repeat: Infinity }}>⚡</motion.span>
+                <span className="text-sm font-bold text-yellow-300">COMBO x{combo} ACTIVE</span>
+              </motion.div>
+            )}
+
+            {/* Aura status */}
+            <div className="flex items-center gap-2 mt-3">
+              <motion.div
+                className="w-2 h-2 rounded-full"
+                style={{ background: auraColor }}
+                animate={{ scale: [1,1.5,1], opacity: [0.6,1,0.6] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <span className="text-xs text-white/35 uppercase tracking-widest">
+                Dominant Aura: {state.skills.sort((a,b)=>b.value-a.value)[0]?.name}
+              </span>
+            </div>
+          </div>
+
+          {/* Future Self link */}
+          <Link href="/futureself">
+            <motion.div
+              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(244,114,182,0.3)" }}
+              className="flex flex-col items-center gap-2 p-4 rounded-2xl cursor-pointer"
+              style={{ background: "rgba(244,114,182,0.08)", border: "1px solid rgba(244,114,182,0.2)" }}
+            >
+              <Sparkles size={20} className="text-pink-400" />
+              <div className="text-xs font-semibold text-pink-300 text-center">Future<br/>Self</div>
+            </motion.div>
+          </Link>
         </motion.div>
 
         {/* Stat cards */}

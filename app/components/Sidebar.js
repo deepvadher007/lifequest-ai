@@ -2,19 +2,20 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Sword, Bot, BarChart2, User, LogOut, Zap, Globe, GitBranch, Shield, Skull, Play } from "lucide-react";
+import { LayoutDashboard, Sword, Bot, BarChart2, User, LogOut, Zap, Globe, GitBranch, Shield, Skull, Play, Sparkles } from "lucide-react";
 import { useGame } from "../lib/store";
 
 const navItems = [
-  { href: "/dashboard",  icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/quests",     icon: Sword,           label: "Quests"    },
-  { href: "/boss",       icon: Skull,           label: "Boss Battle", glow: "#ef4444" },
-  { href: "/world",      icon: Globe,           label: "World",    glow: "#22d3ee" },
-  { href: "/skilltree",  icon: GitBranch,       label: "Skill Tree", glow: "#34d399" },
-  { href: "/coach",      icon: Bot,             label: "AI Coach"  },
-  { href: "/stats",      icon: BarChart2,       label: "Stats"     },
-  { href: "/profile",    icon: User,            label: "Profile"   },
-  { href: "/demo",       icon: Play,            label: "Demo Mode", glow: "#fbbf24" },
+  { href: "/dashboard",  icon: LayoutDashboard, label: "Dashboard"   },
+  { href: "/quests",     icon: Sword,           label: "Quests"      },
+  { href: "/boss",       icon: Skull,           label: "Boss Battle",  glow: "#ef4444" },
+  { href: "/world",      icon: Globe,           label: "World",        glow: "#22d3ee" },
+  { href: "/skilltree",  icon: GitBranch,       label: "Skill Tree",   glow: "#34d399" },
+  { href: "/futureself", icon: Sparkles,        label: "Future Self",  glow: "#f472b6" },
+  { href: "/coach",      icon: Bot,             label: "AI Coach"    },
+  { href: "/stats",      icon: BarChart2,       label: "Stats"       },
+  { href: "/profile",    icon: User,            label: "Profile"     },
+  { href: "/demo",       icon: Play,            label: "Demo Mode",    glow: "#fbbf24" },
 ];
 
 export default function Sidebar() {
