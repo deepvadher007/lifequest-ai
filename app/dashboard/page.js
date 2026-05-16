@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useGame } from "../lib/store";
 import AppShell from "../components/AppShell";
 import Link from "next/link";
-import { Sword, Bot, BarChart2, Zap, TrendingUp, CheckCircle2, Circle } from "lucide-react";
+import { Sword, Bot, BarChart2, Zap, TrendingUp, CheckCircle2, Circle, Skull } from "lucide-react";
 
 function StatCard({ label, value, sub, color, icon: Icon, delay = 0 }) {
   return (
@@ -215,6 +215,7 @@ export default function DashboardPage() {
             <h2 className="font-semibold text-white mb-1">Quick Actions</h2>
             {[
               { href: "/quests", icon: Sword, label: "Complete Quests", sub: "Earn XP and level up", color: "#a78bfa" },
+              { href: "/boss",   icon: Skull, label: "Boss Battle",     sub: `${state.bossHP} HP remaining`, color: "#ef4444" },
               { href: "/coach",  icon: Bot,   label: "Talk to AI Coach", sub: "Get personalized guidance", color: "#22d3ee" },
               { href: "/stats",  icon: BarChart2, label: "View Stats", sub: "Track your progress", color: "#34d399" },
             ].map(item => (

@@ -76,12 +76,20 @@ function QuestCard({ quest, onComplete }) {
           <h3 className={`font-semibold text-sm ${quest.done ? "line-through text-white/35" : "text-white"}`}>
             {quest.title}
           </h3>
-          <div
-            className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold flex-shrink-0"
-            style={{ background: `${colors.text}20`, color: colors.text }}
-          >
-            <Zap size={10} />
-            {quest.xp} XP
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <div
+              className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
+              style={{ background: "rgba(239,68,68,0.12)", color: "#f87171" }}
+            >
+              ⚔ -{quest.bossDmg}
+            </div>
+            <div
+              className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
+              style={{ background: `${colors.text}20`, color: colors.text }}
+            >
+              <Zap size={10} />
+              {quest.xp} XP
+            </div>
           </div>
         </div>
         <p className={`text-xs mt-1 ${quest.done ? "text-white/25" : "text-white/45"}`}>{quest.desc}</p>
