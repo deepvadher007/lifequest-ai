@@ -282,26 +282,27 @@ export default function BossPage() {
 
   return (
     <AppShell>
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 sm:mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-white">Boss Battle</h1>
-              <p className="text-white/40 mt-1">Complete quests to attack the Daily Boss.</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Boss Battle</h1>
+              <p className="text-white/40 mt-1 text-sm">Complete quests to attack the Daily Boss.</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
               onClick={resetQuests}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/50 hover:text-white/80 transition-colors"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm text-white/50 hover:text-white/80 transition-colors"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
-              <RotateCcw size={14} /> New Day
+              <RotateCcw size={13} /> New Day
             </motion.button>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Vertical on mobile, side-by-side on desktop */}
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Left — Boss arena */}
           <div className="flex flex-col gap-6">
             {/* Arena */}

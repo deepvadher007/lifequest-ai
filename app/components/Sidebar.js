@@ -2,26 +2,28 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Sword, Bot, BarChart2, User, LogOut, Zap, Globe, GitBranch, Shield, Skull, Play, Sparkles } from "lucide-react";
+import { LayoutDashboard, Sword, Bot, BarChart2, User, LogOut, Zap, Globe, GitBranch, Shield, Skull, Play, Sparkles, Layers } from "lucide-react";
 import { useGame } from "../lib/store";
 
 const navItems = [
-  { href: "/dashboard",  icon: LayoutDashboard, label: "Dashboard"   },
-  { href: "/quests",     icon: Sword,           label: "Quests"      },
+  { href: "/dashboard",  icon: LayoutDashboard, label: "Dashboard"                    },
+  { href: "/quests",     icon: Sword,           label: "Quests"                       },
   { href: "/boss",       icon: Skull,           label: "Boss Battle",  glow: "#ef4444" },
-  { href: "/world",      icon: Globe,           label: "World",        glow: "#22d3ee" },
+  { href: "/domain",     icon: Layers,          label: "Domain",       glow: "#22d3ee" },
+  { href: "/world",      icon: Globe,           label: "World",        glow: "#60a5fa" },
   { href: "/skilltree",  icon: GitBranch,       label: "Skill Tree",   glow: "#34d399" },
   { href: "/futureself", icon: Sparkles,        label: "Future Self",  glow: "#f472b6" },
-  { href: "/coach",      icon: Bot,             label: "AI Coach"    },
-  { href: "/stats",      icon: BarChart2,       label: "Stats"       },
-  { href: "/profile",    icon: User,            label: "Profile"     },
+  { href: "/coach",      icon: Bot,             label: "AI Coach"                     },
+  { href: "/stats",      icon: BarChart2,       label: "Stats"                        },
+  { href: "/profile",    icon: User,            label: "Profile"                      },
   { href: "/demo",       icon: Play,            label: "Demo Mode",    glow: "#fbbf24" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { state, xpProgress, bossHPPercent } = useGame();
+  const { state, xpProgress, bossHPPercent, getCurrentDomain, shadowMode } = useGame();
+  const domain = getCurrentDomain ? getCurrentDomain() : { name: "Neon Slums", accent: "#fb923c", color: "249,115,22" };
 
   return (
     <aside
@@ -42,12 +44,12 @@ export default function Sidebar() {
       <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
         <div className="flex items-center gap-3 mb-3">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-cyan-400 flex items-center justify-center text-sm font-bold flex-shrink-0"
-            style={{ boxShadow: "0 0 12px rgba(139,92,246,0.4)" }}>
+            style={{ boxShadow: `0 0 12px ${domain.accent}60` }}>
             {state.user.avatar}
           </div>
           <div className="min-w-0">
             <div className="text-sm font-semibold text-white truncate">{state.user.name}</div>
-            <div className="text-xs text-violet-300">Level {state.level}</div>
+            <div className="text-xs" style={{ color: domain.accent }}>Level {state.level} · {domain.name}</div>
           </div>
         </div>
         <div className="flex flex-col gap-1">
@@ -58,7 +60,7 @@ export default function Sidebar() {
           <div className="w-full h-1.5 rounded-full bg-white/5">
             <motion.div animate={{ width: `${xpProgress()}%` }} transition={{ duration: 0.6 }}
               className="h-full rounded-full relative overflow-hidden"
-              style={{ background: "linear-gradient(90deg, #7c3aed, #60a5fa)" }}>
+              style={{ background: shadowMode ? "linear-gradient(90deg,#ef4444,#dc2626)" : `linear-gradient(90deg, ${domain.accent}, #60a5fa)` }}>
               <motion.div animate={{ x: ["0%","100%"] }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 w-1/2" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)" }} />
             </motion.div>

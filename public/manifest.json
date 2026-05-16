@@ -1,0 +1,22 @@
+{
+  "name": "LifeQuest AI",
+  "short_name": "LifeQuest",
+  "description": "Level Up Your Real Life — AI-powered gamified self-improvement",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#080810",
+  "theme_color": "#080810",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

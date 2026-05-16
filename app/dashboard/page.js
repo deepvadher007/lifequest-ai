@@ -4,7 +4,7 @@ import { useGame } from "../lib/store";
 import AppShell from "../components/AppShell";
 import PlayerAvatar from "../components/PlayerAvatar";
 import Link from "next/link";
-import { Sword, Bot, BarChart2, Zap, TrendingUp, CheckCircle2, Circle, Skull, Sparkles } from "lucide-react";
+import { Sword, Bot, BarChart2, Zap, TrendingUp, CheckCircle2, Circle, Skull, Sparkles, Moon } from "lucide-react";
 
 function StatCard({ label, value, sub, color, icon: Icon, delay = 0 }) {
   return (
@@ -28,43 +28,77 @@ function StatCard({ label, value, sub, color, icon: Icon, delay = 0 }) {
 }
 
 export default function DashboardPage() {
-  const { state, xpProgress, xpInCurrentLevel, XP_PER_LEVEL, getAuraColor, combo } = useGame();
+  const { state, xpProgress, xpInCurrentLevel, XP_PER_LEVEL, getAuraColor, combo, toggleShadowMode, shadowMode, getCurrentDomain } = useGame();
   const todayQuests = state.quests.slice(0, 5);
   const doneToday = todayQuests.filter(q => q.done).length;
   const graphBars = state.weeklyXP;
   const days = ["M", "T", "W", "T", "F", "S", "S"];
   const maxBar = Math.max(...graphBars);
   const auraColor = getAuraColor ? getAuraColor() : "#a78bfa";
+  const domain = getCurrentDomain ? getCurrentDomain() : { name: "Neon Slums", color: "249,115,22", accent: "#fb923c" };
 
   return (
     <AppShell>
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
         {/* Header with Avatar */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex items-center gap-8"
+          className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 lg:gap-8"
         >
-          {/* Avatar */}
-          <PlayerAvatar size="md" showTitle={true} />
+          {/* Avatar — smaller on mobile */}
+          <div className="hidden sm:block">
+            <PlayerAvatar size="md" showTitle={true} />
+          </div>
+          <div className="flex sm:hidden items-center gap-3">
+            <PlayerAvatar size="sm" showTitle={false} />
+            <div>
+              <h1 className="text-xl font-bold text-white">
+                <span style={{
+                  background: `linear-gradient(135deg, ${auraColor}, #60a5fa)`,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
+                }}>{state.user.name}</span>
+              </h1>
+              <p className="text-white/40 text-xs">Level {state.level} · {state.streak}d streak</p>
+            </div>
+          </div>
 
-          {/* Greeting */}
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-white">
+          {/* Greeting — desktop */}
+          <div className="flex-1 hidden sm:block">
+            <h1 className="text-2xl lg:text-3xl font-bold text-white">
               Good morning,{" "}
               <span style={{
                 background: `linear-gradient(135deg, ${auraColor}, #60a5fa)`,
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
               }}>{state.user.name}</span> 👋
             </h1>
-            <p className="text-white/40 mt-1">You&apos;re on a {state.streak}-day streak. Keep the momentum going.</p>
+            <p className="text-white/40 mt-1 text-sm">You&apos;re on a {state.streak}-day streak. Keep the momentum going.</p>
+
+            {/* Domain badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="inline-flex items-center gap-2 mt-2 px-3 py-1 rounded-full"
+              style={{ background: `rgba(${domain.color},0.1)`, border: `1px solid rgba(${domain.color},0.25)` }}
+            >
+              <motion.div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: domain.accent, boxShadow: `0 0 6px ${domain.accent}` }}
+                animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: domain.accent }}>
+                {domain.name}
+              </span>
+            </motion.div>
 
             {/* Combo indicator */}
             {combo >= 2 && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center gap-2 mt-3 px-4 py-1.5 rounded-full"
+                className="inline-flex items-center gap-2 mt-2 ml-2 px-4 py-1.5 rounded-full"
                 style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.3)" }}
               >
                 <motion.span animate={{ scale: [1,1.3,1] }} transition={{ duration: 0.5, repeat: Infinity }}>⚡</motion.span>
@@ -73,7 +107,7 @@ export default function DashboardPage() {
             )}
 
             {/* Aura status */}
-            <div className="flex items-center gap-2 mt-3">
+            <div className="flex items-center gap-2 mt-2">
               <motion.div
                 className="w-2 h-2 rounded-full"
                 style={{ background: auraColor }}
@@ -81,22 +115,56 @@ export default function DashboardPage() {
                 transition={{ duration: 2, repeat: Infinity }}
               />
               <span className="text-xs text-white/35 uppercase tracking-widest">
-                Dominant Aura: {state.skills.sort((a,b)=>b.value-a.value)[0]?.name}
+                Dominant Aura: {[...state.skills].sort((a,b)=>b.value-a.value)[0]?.name}
               </span>
             </div>
           </div>
 
-          {/* Future Self link */}
-          <Link href="/futureself">
-            <motion.div
-              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(244,114,182,0.3)" }}
-              className="flex flex-col items-center gap-2 p-4 rounded-2xl cursor-pointer"
-              style={{ background: "rgba(244,114,182,0.08)", border: "1px solid rgba(244,114,182,0.2)" }}
+          {/* Right side buttons */}
+          <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
+            {/* SHADOW MODE button */}
+            <motion.button
+              onClick={toggleShadowMode}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
+              className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm overflow-hidden flex-1 sm:flex-none justify-center sm:justify-start"
+              style={shadowMode ? {
+                background: "rgba(239,68,68,0.2)",
+                border: "1px solid rgba(239,68,68,0.5)",
+                color: "#ef4444",
+                boxShadow: "0 0 20px rgba(239,68,68,0.3)",
+              } : {
+                background: "rgba(0,0,0,0.6)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                color: "#ef4444",
+              }}
             >
-              <Sparkles size={20} className="text-pink-400" />
-              <div className="text-xs font-semibold text-pink-300 text-center">Future<br/>Self</div>
-            </motion.div>
-          </Link>
+              {!shadowMode && (
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ opacity: [0, 0.15, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  style={{ background: "radial-gradient(circle, rgba(239,68,68,0.4), transparent)" }}
+                />
+              )}
+              <Moon size={14} className="relative z-10 flex-shrink-0" />
+              <span className="relative z-10 uppercase tracking-wider text-xs sm:text-sm">
+                {shadowMode ? "Exit Shadow" : "Shadow Mode"}
+              </span>
+            </motion.button>
+
+            {/* Future Self link */}
+            <Link href="/futureself" className="flex-1 sm:flex-none">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center justify-center sm:justify-start gap-2 px-4 py-2.5 rounded-xl cursor-pointer h-full"
+                style={{ background: "rgba(244,114,182,0.08)", border: "1px solid rgba(244,114,182,0.2)" }}
+              >
+                <Sparkles size={14} className="text-pink-400 flex-shrink-0" />
+                <div className="text-xs font-semibold text-pink-300">Future Self</div>
+              </motion.div>
+            </Link>
+          </div>
         </motion.div>
 
         {/* Stat cards */}

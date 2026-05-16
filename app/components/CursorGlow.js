@@ -1,46 +1,50 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CursorGlow() {
-  const x = useMotionValue(-400);
-  const y = useMotionValue(-400);
-  const sx = useSpring(x, { stiffness: 80, damping: 22 });
-  const sy = useSpring(y, { stiffness: 80, damping: 22 });
+  const x = useMotionValue(-600);
+  const y = useMotionValue(-600);
+  // Softer spring — less CPU
+  const sx = useSpring(x, { stiffness: 60, damping: 25 });
+  const sy = useSpring(y, { stiffness: 60, damping: 25 });
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const move = (e) => { x.set(e.clientX); y.set(e.clientY); };
-    window.addEventListener("mousemove", move);
+    const move = (e) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+      if (!visible) setVisible(true);
+    };
+    window.addEventListener("mousemove", move, { passive: true });
     return () => window.removeEventListener("mousemove", move);
-  }, [x, y]);
+  }, [x, y, visible]);
+
+  if (!visible) return null;
 
   return (
     <>
-      {/* Large ambient glow */}
+      {/* Ambient glow — large, very subtle */}
       <motion.div
-        className="fixed pointer-events-none z-[9990]"
+        className="fixed pointer-events-none z-[9990] rounded-full"
         style={{
-          width: 600, height: 600,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,92,246,0.055) 0%, transparent 70%)",
-          translateX: useSpring(useMotionValue(0), { stiffness: 40, damping: 20 }),
-          x: sx,
-          y: sy,
-          marginLeft: -300,
-          marginTop: -300,
+          width: 500, height: 500,
+          background: "radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%)",
+          x: sx, y: sy,
+          marginLeft: -250, marginTop: -250,
+          willChange: "transform",
         }}
       />
-      {/* Sharp cursor dot */}
+      {/* Cursor dot */}
       <motion.div
         className="fixed pointer-events-none z-[9991] rounded-full"
         style={{
-          width: 8, height: 8,
-          background: "rgba(167,139,250,0.9)",
-          boxShadow: "0 0 12px rgba(167,139,250,0.8), 0 0 24px rgba(167,139,250,0.4)",
-          x: sx,
-          y: sy,
-          marginLeft: -4,
-          marginTop: -4,
+          width: 7, height: 7,
+          background: "rgba(167,139,250,0.85)",
+          boxShadow: "0 0 10px rgba(167,139,250,0.7)",
+          x: sx, y: sy,
+          marginLeft: -3.5, marginTop: -3.5,
+          willChange: "transform",
         }}
       />
     </>
