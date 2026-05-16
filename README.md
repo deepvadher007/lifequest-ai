@@ -1,5 +1,7 @@
 # ⚡ LifeQuest AI — The Playable Self-Evolution System
 
+App link :- https://lifequestai.netlify.app/
+
 > “What if your real life worked like a game?”
 
 LifeQuest AI transforms habits, discipline, focus, fitness, and growth into a fully immersive RPG-style experience where **YOU are the main character**.
